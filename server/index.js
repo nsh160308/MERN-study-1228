@@ -34,6 +34,11 @@ app.get('/', (req, res) => {
   res.send('Hello World! 안녕하세요^^. 새해복 많이 받으세요 nodemon이 동작되나요?')
 })
 
+app.get('/api/hello', (req, res) => {
+    res.send('안녕하세요 axios~')
+})
+
+
 //회원가입을 위한 Register Route 생성
 app.post('/api/users/register', (req, res) => {
     //회원가입할 때 필요한 정보들을 클라이언트에서 가져 오면
@@ -72,20 +77,21 @@ app.post('/api/users/register', (req, res) => {
 
 //로그인을 위한 Route생성
 app.post('/api/users/login', (req, res) => {
-    console.log("1)실행됨?");
+    console.log('[1]로그인 시도 - ', req.body);
     //첫번째 일.요청된 이메일을 DB에서 찾아야되겠죠?
     User.findOne({ email: req.body.email }, (err, user) => {
-        console.log("2)err");
+        console.log("[2]err", err);
+        console.log("[3]user", user);
         //만약에 요청한 이메일이(req.body.email) User안에 한명도 없다면
         //이 user가없겠죠?
         if(!user) {
-            console.log("3)에러있으면 여기");
+            console.log('[3-1]에러 발생');
             return res.json({
                 loginSuccess: false,
                 message: "제공된 이메일에 해당하는 유저가 없습니다."
             })
         }
-        console.log("4)에러 없으니 여기");
+        console.log("[3-2]요청된 이메일이 있습니다.");
         //요청된 이메일이 DB에 있다면 비밀번호가 맞는 비밀번호인지 확인해야죠?
         //이 user에는 이메일뿐만아니라 사용자가 입력한 모든정보가 들어있겠죠?
         //그렇다면 비밀번호도 있다는 뜻이겠죠?
@@ -95,13 +101,18 @@ app.post('/api/users/login', (req, res) => {
         //두번째인자는 사용자가 입력한 비밀번호와 DB에저장된 비밀번호를 비교해서
         //그게 맞다면 두번째 인자에 넣을것이기 때문에 이름은 isMatch로 한다.
         //그리고 이 comparePassword()메소드를 User모델을 관리하는 User.js에서 만들면된다.
+        console.log("[4]비밀번호 확인 요청");
         user.comparePassword(req.body.password, (err, isMatch) => {
-            
             if(!isMatch)//비밀번호가 틀렸다는것
             return res.json({ loginSuccess: false, message: "비밀번호가 틀렸습니다."})
             //비밀번호까지 맞다면 그 유저에 맞는 토큰을 생성해야겠죠?
             //이것도 똑같이 메소드를 User모델을 관리하는 User.js에서 만들어주면된다.
+            console.log('[8]비밀번호가 일치합니다.');
+            console.log('[9]토큰을 생성합니다.');
             user.generateToken((err, user) => {
+                console.log('[16]전달된 결과를 확인합니다.');
+                console.log('[16-1] err', err);
+                console.log('[16-2] user',user);
                 if(err) return res.status(400).send(err);
 
                 //에러가 없다면 user정보를 가져오는데
@@ -110,6 +121,7 @@ app.post('/api/users/login', (req, res) => {
                 //쿠키에다가 할 수 있고, local storage에 저장할 수 있는데
                 //여기서는 쿠키에다가 하겠다.
                 //쿠키에다가 토큰을 저장하려면 cookie-parser라는 라이브러리를 설치해줘야된다.
+                console.log('[17]에러가 없습니다. 토큰을 쿠키에 저장합니다.');
                 res.cookie("x_auth",user.token)
                 .status(200)
                 .json({ loginSuccess: true, userId: user._id });
