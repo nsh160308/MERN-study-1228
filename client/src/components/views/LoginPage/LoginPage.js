@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../_actions/user_action';
+import { withRouter } from 'react-router-dom';
 
 
 function LoginPage(props) {
@@ -36,7 +37,7 @@ function LoginPage(props) {
             .then(res => {
                 console.log('<7>response', res);
                 if(res.payload.loginSuccess) {
-                    //props.history.push('/')//페이지 이동처리
+                    props.history.push('/')//페이지 이동처리
                 } else {
                     alert('Error');
                 }

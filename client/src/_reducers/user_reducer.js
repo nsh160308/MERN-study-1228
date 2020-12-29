@@ -1,5 +1,7 @@
 import {
-    LOGIN_USER
+    LOGIN_USER,
+    REGISTER_USER,
+    AUTH_USER
 } from '../_actions/types';
 
 
@@ -10,13 +12,16 @@ export default function (state = {}, action) {
             console.log('<5>{...state}', {...state});
             return {...state, loginSuccess: action.payload }
             break;
-    
+        case REGISTER_USER:
+            return {...state, register: action.paylaod }
+            break;
+        case AUTH_USER:
+            return {...state, userData: action.payload }
+            break;
         default:
             console.log('default', action.type);
             return state;
+            break;
     }
-
-
-
 
 }

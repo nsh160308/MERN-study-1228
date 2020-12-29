@@ -136,6 +136,7 @@ userSchema.methods.generateToken = function(cb) {
 }
 
 userSchema.statics.findByToken = function( token, cb ) {
+    console.log('<2>');
     var user = this;
 
     //토큰을 가져왔으면 여기서 decode(복호화)한다.
@@ -144,6 +145,8 @@ userSchema.statics.findByToken = function( token, cb ) {
         //클라이언트에서 가져온 token과 DB에 보관된 토큰이 일치하는지 확인한다.
         user.findOne({"_id": decoded, "token": token}, function(err, user) {
             if(err) return cb(err);
+
+            console.log('<3>');
             cb(null, user);
         })
     })

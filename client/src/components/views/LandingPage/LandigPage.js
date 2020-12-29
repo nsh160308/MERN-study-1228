@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
-function LandigPage() {
+function LandigPage(props) {
     /*
     이렇게 axios를 이용해서 server로 보내도 보내지지 않는다.
     왜냐면 server는 5000포트를 사용하고 있는데 client는 3000포트로
@@ -22,12 +23,28 @@ function LandigPage() {
         .then(response => { console.log(response) })
     }, [])
 
+    const onClickHandler = () => {
+        axios.get('/api/users/logout')
+        .then(response => {
+            console.log(response.data);
+            if(response.data.success) {
+                props.history.push('/login');
+            } else {
+                alert('로그아웃 하는데 오류가 발생했습니다.');
+            }
+
+        })
+    }
+
     return (
         <div style={{
             display: 'flex', justifyContent: 'center', alignItems: 'center'
             , width: '100%', height: '100vh'
         }}>
             <h2>시작 페이지</h2>
+            <button onClick={onClickHandler}>
+                로그아웃
+            </button>
         </div>
     )
 }

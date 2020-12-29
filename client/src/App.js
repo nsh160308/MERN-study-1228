@@ -8,6 +8,7 @@ import {
 import LandigPage from './components/views/LandingPage/LandigPage';
 import LoginPage from './components/views/LoginPage/LoginPage';
 import RegisterPage from './components/views/RegisterPage/RegisterPage';
+import Auth from './hoc/auth';
 
 function App() {
   return (
@@ -24,9 +25,9 @@ function App() {
           {/* <Route exact path="/">
             <LandigPage /> */}
           {/* 위 코드를 깔끔하게 하고싶다면 이렇게 하면된다. */}
-          <Route exact path="/" component={LandigPage}/>
-          <Route exact path="/login" component={LoginPage}/>
-          <Route exact path="/register" component={RegisterPage}/>
+          <Route exact path="/" component={Auth(LandigPage, null)}/>
+          <Route exact path="/login" component={Auth(LoginPage, false)}/>
+          <Route exact path="/register" component={Auth(RegisterPage, false)}/>
         </Switch>
       </div>
     </Router>
